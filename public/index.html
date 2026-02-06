@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Банный клуб 7 друзей</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Банный клуб 7 друзей</h1>
+            <p class="subtitle">Собери всех друзей вместе в баню! У тебя 3 попытки пройти 3 уровня</p>
+            <p>Кликай на персонажей и выбирай действия в диалоговом окне</p>
+        </header>
+
+        <div class="game-area">
+            <div class="map-container" id="map">
+                <div class="location nsk active" data-location="nsk">
+                    <div class="location-title">Нск, Кольцово</div>
+                    <div>Дом друзей</div>
+                    <div class="location-characters" id="nsk-characters"></div>
+                </div>
+                <div class="location madagascar" data-location="madagascar">
+                    <div class="location-title">Мадагаскар</div>
+                    <div>Отпуск Децины</div>
+                    <div class="location-characters" id="madagascar-characters"></div>
+                </div>
+                <div class="location free" data-location="free">
+                    <div class="location-title">Свободный</div>
+                    <div>Вахта Шмеля</div>
+                    <div class="location-characters" id="free-characters"></div>
+                </div>
+                <div class="location banya" data-location="banya">
+                    <div class="location-title">БАНЯ</div>
+                    <div>Цель игры!</div>
+                    <div class="location-characters" id="banya-characters"></div>
+                </div>
+            </div>
+
+            <div class="characters-list" id="charactersList">
+                <!-- Персонажи будут добавляться через JS -->
+            </div>
+        </div>
+
+        <div class="game-controls">
+            <div class="dialog-box">
+                <div class="dialog-title">
+                    <span>Диалог</span>
+                    <span id="currentLevel">Уровень 1: Созвездие Кольцово</span>
+                </div>
+                <div class="dialog-content" id="dialogContent">
+                    Добро пожаловать в игру! Кликни на любого персонажа, чтобы начать общение и понять, что нужно делать. Цель: собрать всех 7 друзей в бане!
+                </div>
+                <div class="dialog-choices" id="dialogChoices">
+                    <!-- Варианты выбора будут добавляться через JS -->
+                </div>
+            </div>
+
+            <div class="stats-panel">
+                <div class="level-indicator">
+                    <div class="level-title">Прогресс уровня</div>
+                    <div class="level-progress">
+                        <div class="level-bar" id="levelProgress"></div>
+                    </div>
+                </div>
+
+                <div class="attempts">
+                    <div class="attempt active" id="attempt1">1</div>
+                    <div class="attempt" id="attempt2">2</div>
+                    <div class="attempt" id="attempt3">3</div>
+                </div>
+
+                <div class="inventory">
+                    <div class="inventory-title">Инвентарь</div>
+                    <div class="inventory-items" id="inventoryItems">
+                        <!-- Предметы будут добавляться через JS -->
+                    </div>
+                </div>
+
+                <div class="game-messages" id="gameMessages">
+                    <div class="message new">Игра началась! Собери всех друзей в баню!</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="win-screen" id="winScreen">
+        <div class="win-content">
+            <h2 class="win-title">Победа!</h2>
+            <p class="win-text">Пар легкий! Все 7 друзей собрались в бане! Миссия выполнена блестяще!</p>
+            <p class="win-text">Пуч, Дрон, Троф, Шмель, Децина, Боб и Лёха наконец-то вместе!</p>
+            <button class="restart-btn" id="restartBtn">Играть снова</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

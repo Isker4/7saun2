@@ -1,0 +1,13 @@
+{
+  "name": "7saun-game",
+  "version": "1.0.0",
+  "description": "Банный клуб 7 друзей - логическая игра",
+  "main": "public/index.html",
+  "scripts": {
+    "dev": "echo 'Запустите index.html в браузере'",
+    "build": "echo 'Build complete'"
+  },
+  "keywords": ["game", "logic", "html", "баня"],
+  "author": "Your Name",
+  "license": "MIT"
+}

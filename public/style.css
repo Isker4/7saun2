@@ -1,0 +1,488 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', 'Comic Neue', sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    color: #e6e6e6;
+    min-height: 100vh;
+    padding: 20px;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: rgba(0, 30, 60, 0.7);
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    border: 2px solid #4fc3f7;
+}
+
+h1 {
+    color: #ff9966;
+    font-size: 2.8rem;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    font-family: 'Comic Neue', cursive;
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    color: #4fc3f7;
+    margin-bottom: 15px;
+}
+
+.game-area {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+@media (max-width: 900px) {
+    .game-area {
+        grid-template-columns: 1fr;
+    }
+}
+
+.map-container {
+    background: rgba(10, 25, 47, 0.9);
+    border-radius: 15px;
+    padding: 20px;
+    position: relative;
+    min-height: 500px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+    border: 1px solid #2d5a7c;
+}
+
+.location {
+    position: absolute;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 2px solid transparent;
+    min-width: 180px;
+}
+
+.location:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+}
+
+.location.nsk {
+    top: 150px;
+    left: 100px;
+    background: linear-gradient(135deg, #2d5a7c, #1e3a5f);
+}
+
+.location.madagascar {
+    top: 50px;
+    right: 150px;
+    background: linear-gradient(135deg, #ff8a00, #e52e71);
+}
+
+.location.free {
+    bottom: 100px;
+    left: 300px;
+    background: linear-gradient(135deg, #4CAF50, #2E7D32);
+}
+
+.location.banya {
+    top: 250px;
+    right: 200px;
+    background: linear-gradient(135deg, #ff5252, #b33939);
+    opacity: 0.5;
+}
+
+.location.active {
+    border-color: #ffd700;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+}
+
+.location-title {
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+    color: #fff;
+    font-family: 'Comic Neue', cursive;
+}
+
+.location-characters {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    justify-content: center;
+}
+
+.characters-list {
+    background: rgba(30, 40, 60, 0.9);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+    overflow-y: auto;
+    max-height: 500px;
+    border: 1px solid #4fc3f7;
+}
+
+.character {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    margin-bottom: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-left: 4px solid transparent;
+}
+
+.character:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateX(5px);
+}
+
+.character.active {
+    background: rgba(79, 195, 247, 0.2);
+    border-left-color: #4fc3f7;
+}
+
+.character-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-right: 15px;
+    font-size: 1.2rem;
+    font-family: 'Comic Neue', cursive;
+}
+
+.character-info {
+    flex: 1;
+}
+
+.character-name {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #fff;
+    font-family: 'Comic Neue', cursive;
+}
+
+.character-location {
+    font-size: 0.9rem;
+    color: #aaa;
+    margin-top: 3px;
+}
+
+.character-status {
+    font-size: 0.8rem;
+    padding: 3px 8px;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.game-controls {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+@media (max-width: 900px) {
+    .game-controls {
+        grid-template-columns: 1fr;
+    }
+}
+
+.dialog-box {
+    background: rgba(20, 30, 48, 0.95);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+    border: 1px solid #ff9966;
+}
+
+.dialog-title {
+    color: #4fc3f7;
+    margin-bottom: 15px;
+    font-size: 1.3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.dialog-content {
+    min-height: 120px;
+    line-height: 1.6;
+    font-size: 1.1rem;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.dialog-choices {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.choice-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: white;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.3s ease;
+    border-left: 4px solid transparent;
+    font-size: 1rem;
+}
+
+.choice-btn:hover {
+    background: rgba(79, 195, 247, 0.3);
+    border-left-color: #4fc3f7;
+    transform: translateX(5px);
+}
+
+.choice-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.stats-panel {
+    background: rgba(20, 30, 48, 0.95);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+    border: 1px solid #06D6A0;
+}
+
+.level-indicator {
+    margin-bottom: 20px;
+}
+
+.level-title {
+    color: #ff9966;
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+    font-family: 'Comic Neue', cursive;
+}
+
+.level-progress {
+    height: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.level-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #4fc3f7, #2196f3);
+    width: 0%;
+    transition: width 0.5s ease;
+}
+
+.attempts {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.attempt {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.attempt.used {
+    background: #f44336;
+}
+
+.attempt.active {
+    background: #4caf50;
+    box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+}
+
+.inventory {
+    margin-top: 20px;
+}
+
+.inventory-title {
+    color: #ff9966;
+    margin-bottom: 10px;
+    font-family: 'Comic Neue', cursive;
+}
+
+.inventory-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    min-height: 50px;
+}
+
+.inventory-item {
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    border: 1px solid #4fc3f7;
+}
+
+.game-messages {
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 20px;
+    min-height: 80px;
+    max-height: 150px;
+    overflow-y: auto;
+    border: 1px solid #7209B7;
+}
+
+.message {
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 0.9rem;
+}
+
+.message.new {
+    color: #4fc3f7;
+    animation: fadeIn 0.5s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.win-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s;
+}
+
+.win-screen.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.win-content {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    max-width: 600px;
+    box-shadow: 0 0 50px rgba(79, 195, 247, 0.5);
+    animation: pulse 2s infinite;
+    border: 3px solid #ff9966;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 50px rgba(79, 195, 247, 0.5); }
+    50% { box-shadow: 0 0 70px rgba(79, 195, 247, 0.8); }
+    100% { box-shadow: 0 0 50px rgba(79, 195, 247, 0.5); }
+}
+
+.win-title {
+    color: #ff9966;
+    font-size: 3rem;
+    margin-bottom: 20px;
+    font-family: 'Comic Neue', cursive;
+}
+
+.win-text {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    line-height: 1.6;
+}
+
+.restart-btn {
+    background: linear-gradient(135deg, #4fc3f7, #2196f3);
+    border: none;
+    color: white;
+    padding: 15px 40px;
+    font-size: 1.2rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    margin-top: 20px;
+    font-family: 'Comic Neue', cursive;
+}
+
+.restart-btn:hover {
+    transform: scale(1.05);
+}
+
+.char-mini {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.8rem;
+    margin: 2px;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
