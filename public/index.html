@@ -4,85 +4,599 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Банный клуб 7 друзей</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 25px;
+            background: rgba(15, 32, 39, 0.9);
+            border-radius: 20px;
+            border: 3px solid #ff9966;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        h1 {
+            color: #ff9966;
+            font-size: 3.2rem;
+            margin-bottom: 10px;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+            font-weight: 800;
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: #4fc3f7;
+            margin-bottom: 15px;
+        }
+
+        .game-area {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 1000px) {
+            .game-area {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .map-container {
+            background: rgba(15, 32, 39, 0.9);
+            border-radius: 20px;
+            padding: 25px;
+            min-height: 600px;
+            border: 2px solid #2c5364;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .location {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            border: 2px solid;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .location::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, currentColor, transparent);
+            opacity: 0.3;
+        }
+
+        .location.nsk {
+            border-color: #4fc3f7;
+            flex: 2;
+        }
+
+        .location.madagascar {
+            border-color: #ff9966;
+            flex: 1.5;
+        }
+
+        .location.free {
+            border-color: #4CAF50;
+            flex: 1.5;
+        }
+
+        .location.banya {
+            border-color: #ff5252;
+            flex: 1;
+            background: rgba(255, 82, 82, 0.1);
+        }
+
+        .location-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .location-icon {
+            font-size: 1.8rem;
+        }
+
+        .location-content {
+            min-height: 120px;
+            margin-bottom: 15px;
+        }
+
+        .characters-in-location {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .character-mini {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 80px;
+        }
+
+        .character-mini:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .character-mini.active {
+            background: rgba(79, 195, 247, 0.3);
+            border: 2px solid #4fc3f7;
+        }
+
+        .character-emoji {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+
+        .character-name {
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .dialog-bubble {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 15px;
+            margin-top: 10px;
+            border-left: 4px solid;
+            animation: fadeIn 0.5s;
+        }
+
+        .dialog-bubble.nsk { border-left-color: #4fc3f7; }
+        .dialog-bubble.madagascar { border-left-color: #ff9966; }
+        .dialog-bubble.free { border-left-color: #4CAF50; }
+        .dialog-bubble.banya { border-left-color: #ff5252; }
+
+        .dialog-text {
+            font-size: 1.1rem;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .dialog-speaker {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: bold;
+            color: #4fc3f7;
+            margin-bottom: 8px;
+        }
+
+        .dialog-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .action-btn {
+            background: rgba(79, 195, 247, 0.2);
+            border: 1px solid #4fc3f7;
+            color: white;
+            padding: 12px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .action-btn:hover:not(:disabled) {
+            background: rgba(79, 195, 247, 0.4);
+            transform: translateX(5px);
+        }
+
+        .action-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            border-color: #666;
+        }
+
+        .action-requirement {
+            font-size: 0.9rem;
+            color: #ff9966;
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        .right-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .stats-panel {
+            background: rgba(15, 32, 39, 0.9);
+            border-radius: 20px;
+            padding: 25px;
+            border: 2px solid #4CAF50;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .level-indicator {
+            margin-bottom: 25px;
+        }
+
+        .level-title {
+            color: #ff9966;
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .level-progress {
+            height: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .level-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #4fc3f7, #2196f3);
+            width: 0%;
+            transition: width 0.8s ease;
+        }
+
+        .attempts {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .attempt {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            border: 2px solid transparent;
+        }
+
+        .attempt.used {
+            background: #f44336;
+            border-color: #ff7961;
+        }
+
+        .attempt.active {
+            background: #4caf50;
+            border-color: #80e27e;
+            box-shadow: 0 0 15px rgba(76, 175, 80, 0.5);
+            animation: pulse 2s infinite;
+        }
+
+        .inventory {
+            margin-top: 20px;
+        }
+
+        .inventory-title {
+            color: #ff9966;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+        }
+
+        .inventory-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            min-height: 60px;
+        }
+
+        .inventory-item {
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            font-size: 1rem;
+            border: 1px solid #4fc3f7;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .inventory-emoji {
+            font-size: 1.2rem;
+        }
+
+        .game-messages {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            height: 200px;
+            overflow-y: auto;
+            border: 1px solid #7209B7;
+        }
+
+        .message {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .message.new {
+            color: #4fc3f7;
+            animation: slideIn 0.5s;
+        }
+
+        .character-travel {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            animation: travel 2s infinite;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(76, 175, 80, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
+        }
+
+        @keyframes travel {
+            0% { transform: translateX(-10px); }
+            50% { transform: translateX(10px); }
+            100% { transform: translateX(-10px); }
+        }
+
+        .win-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s;
+        }
+
+        .win-screen.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .win-content {
+            background: linear-gradient(135deg, #0f2027, #203a43);
+            padding: 50px;
+            border-radius: 25px;
+            text-align: center;
+            max-width: 700px;
+            border: 3px solid #ff9966;
+            box-shadow: 0 0 60px rgba(79, 195, 247, 0.6);
+            animation: winPulse 3s infinite;
+        }
+
+        @keyframes winPulse {
+            0% { box-shadow: 0 0 50px rgba(79, 195, 247, 0.6); }
+            50% { box-shadow: 0 0 80px rgba(255, 153, 102, 0.8); }
+            100% { box-shadow: 0 0 50px rgba(79, 195, 247, 0.6); }
+        }
+
+        .win-title {
+            color: #ff9966;
+            font-size: 3.5rem;
+            margin-bottom: 25px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .win-text {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            color: #fff;
+        }
+
+        .restart-btn {
+            background: linear-gradient(135deg, #4fc3f7, #2196f3);
+            border: none;
+            color: white;
+            padding: 18px 45px;
+            font-size: 1.3rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 30px;
+            font-weight: bold;
+        }
+
+        .restart-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(79, 195, 247, 0.4);
+        }
+
+        .location-status {
+            display: inline-block;
+            padding: 5px 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-left: 10px;
+        }
+
+        .emoji {
+            font-size: 1.2rem;
+            margin-right: 5px;
+        }
+
+        .location-dialog-container {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Банный клуб 7 друзей</h1>
-            <p class="subtitle">Собери всех друзей вместе в баню! У тебя 3 попытки пройти 3 уровня</p>
-            <p>Кликай на персонажей и выбирай действия в диалоговом окне</p>
+            <h1>🚀 Банный клуб 7 друзей</h1>
+            <p class="subtitle">Собери всех друзей в баню! У тебя 3 попытки пройти 3 уровня</p>
+            <p>👆 Кликай на персонажей в локациях и выбирай действия в диалогах</p>
         </header>
 
         <div class="game-area">
-            <div class="map-container" id="map">
-                <div class="location nsk active" data-location="nsk">
-                    <div class="location-title">Нск, Кольцово</div>
-                    <div>Дом друзей</div>
-                    <div class="location-characters" id="nsk-characters"></div>
-                </div>
-                <div class="location madagascar" data-location="madagascar">
-                    <div class="location-title">Мадагаскар</div>
-                    <div>Отпуск Децины</div>
-                    <div class="location-characters" id="madagascar-characters"></div>
-                </div>
-                <div class="location free" data-location="free">
-                    <div class="location-title">Свободный</div>
-                    <div>Вахта Шмеля</div>
-                    <div class="location-characters" id="free-characters"></div>
-                </div>
-                <div class="location banya" data-location="banya">
-                    <div class="location-title">БАНЯ</div>
-                    <div>Цель игры!</div>
-                    <div class="location-characters" id="banya-characters"></div>
-                </div>
-            </div>
-
-            <div class="characters-list" id="charactersList">
-                <!-- Персонажи будут добавляться через JS -->
-            </div>
-        </div>
-
-        <div class="game-controls">
-            <div class="dialog-box">
-                <div class="dialog-title">
-                    <span>Диалог</span>
-                    <span id="currentLevel">Уровень 1: Созвездие Кольцово</span>
-                </div>
-                <div class="dialog-content" id="dialogContent">
-                    Добро пожаловать в игру! Кликни на любого персонажа, чтобы начать общение и понять, что нужно делать. Цель: собрать всех 7 друзей в бане!
-                </div>
-                <div class="dialog-choices" id="dialogChoices">
-                    <!-- Варианты выбора будут добавляться через JS -->
-                </div>
-            </div>
-
-            <div class="stats-panel">
-                <div class="level-indicator">
-                    <div class="level-title">Прогресс уровня</div>
-                    <div class="level-progress">
-                        <div class="level-bar" id="levelProgress"></div>
+            <div class="map-container">
+                <div class="location nsk" id="location-nsk">
+                    <div class="location-title">
+                        <span class="location-icon">🏠</span>
+                        <span>Нск, Кольцово - Дом друзей</span>
+                        <span class="location-status" id="nsk-status">5 друзей</span>
+                    </div>
+                    <div class="location-content" id="nsk-content">
+                        <div class="characters-in-location" id="nsk-characters">
+                            <!-- Персонажи Нск будут здесь -->
+                        </div>
+                        <div class="location-dialog-container" id="nsk-dialog">
+                            <!-- Диалоги Нск будут здесь -->
+                        </div>
                     </div>
                 </div>
 
-                <div class="attempts">
-                    <div class="attempt active" id="attempt1">1</div>
-                    <div class="attempt" id="attempt2">2</div>
-                    <div class="attempt" id="attempt3">3</div>
-                </div>
-
-                <div class="inventory">
-                    <div class="inventory-title">Инвентарь</div>
-                    <div class="inventory-items" id="inventoryItems">
-                        <!-- Предметы будут добавляться через JS -->
+                <div class="location madagascar" id="location-madagascar">
+                    <div class="location-title">
+                        <span class="location-icon">🏝️</span>
+                        <span>Мадагаскар - Отпуск Децины</span>
+                    </div>
+                    <div class="location-content" id="madagascar-content">
+                        <div class="characters-in-location" id="madagascar-characters">
+                            <!-- Децина будет здесь -->
+                        </div>
+                        <div class="location-dialog-container" id="madagascar-dialog">
+                            <!-- Диалоги Мадагаскара будут здесь -->
+                        </div>
                     </div>
                 </div>
 
-                <div class="game-messages" id="gameMessages">
-                    <div class="message new">Игра началась! Собери всех друзей в баню!</div>
+                <div class="location free" id="location-free">
+                    <div class="location-title">
+                        <span class="location-icon">🏭</span>
+                        <span>Свободный - Вахта Шмеля</span>
+                    </div>
+                    <div class="location-content" id="free-content">
+                        <div class="characters-in-location" id="free-characters">
+                            <!-- Шмель будет здесь -->
+                        </div>
+                        <div class="location-dialog-container" id="free-dialog">
+                            <!-- Диалоги Свободного будут здесь -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="location banya" id="location-banya">
+                    <div class="location-title">
+                        <span class="location-icon">♨️</span>
+                        <span>БАНЯ - Цель игры!</span>
+                        <span class="location-status" id="banya-status">0/7</span>
+                    </div>
+                    <div class="location-content" id="banya-content">
+                        <div class="characters-in-location" id="banya-characters">
+                            <!-- Персонажи в бане будут здесь -->
+                        </div>
+                        <div class="location-dialog-container" id="banya-dialog">
+                            <!-- Поздравления будут здесь -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="right-panel">
+                <div class="stats-panel">
+                    <div class="level-indicator">
+                        <div class="level-title">
+                            <span id="currentLevelIcon">🚀</span>
+                            <span id="currentLevelText">Уровень 1: Созвездие Кольцово</span>
+                        </div>
+                        <div class="level-progress">
+                            <div class="level-bar" id="levelProgress"></div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 0.9rem; color: #aaa;">
+                            <span>Прогресс</span>
+                            <span id="progressPercent">0%</span>
+                        </div>
+                    </div>
+
+                    <div class="attempts">
+                        <div class="attempt active" id="attempt1">1️⃣</div>
+                        <div class="attempt" id="attempt2">2️⃣</div>
+                        <div class="attempt" id="attempt3">3️⃣</div>
+                    </div>
+
+                    <div class="inventory">
+                        <div class="inventory-title">🎒 Инвентарь</div>
+                        <div class="inventory-items" id="inventoryItems">
+                            <div style="color:#aaa; font-style:italic; padding: 10px;">Инвентарь пуст</div>
+                        </div>
+                    </div>
+
+                    <div class="game-messages" id="gameMessages">
+                        <div class="message new">🎮 Игра началась! Собери всех друзей в баню!</div>
+                        <div class="message">👆 Кликай на персонажей в их локациях</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -90,13 +604,721 @@
 
     <div class="win-screen" id="winScreen">
         <div class="win-content">
-            <h2 class="win-title">Победа!</h2>
-            <p class="win-text">Пар легкий! Все 7 друзей собрались в бане! Миссия выполнена блестяще!</p>
-            <p class="win-text">Пуч, Дрон, Троф, Шмель, Децина, Боб и Лёха наконец-то вместе!</p>
-            <button class="restart-btn" id="restartBtn">Играть снова</button>
+            <h2 class="win-title">🎉 ПОБЕДА! 🎉</h2>
+            <p class="win-text">♨️ Пар легкий! Все 7 друзей собрались в бане!</p>
+            <p class="win-text">🏆 Миссия выполнена блестяще!</p>
+            <p class="win-text">👥 Пуч, Дрон, Троф, Шмель, Децина, Боб и Лёха наконец-то вместе!</p>
+            <button class="restart-btn" id="restartBtn">🔄 Играть снова</button>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        // Игровые данные с исправленной логикой
+        const gameState = {
+            level: 1,
+            attempts: 3,
+            currentAttempt: 1,
+            progress: 0,
+            inventory: [],
+            messages: [
+                {text: '🎮 Игра началась! Собери всех друзей в баню!', new: true},
+                {text: '👆 Кликай на персонажей в их локациях', new: false}
+            ],
+            completedLevels: [],
+            characters: {
+                'Пуч': {
+                    location: 'nsk',
+                    status: '🚗 Готов к бане, но машина сломана',
+                    emoji: '👨‍🔧',
+                    color: '#FF6B6B',
+                    dialog: 'Я бы всех отвез, но у меня карбюратор чихнул... Может, Боб посмотрит?',
+                    actions: [
+                        { 
+                            text: '🔧 Починить машину', 
+                            requirement: '💰 Нужны деньги на запчасти от Лёхи',
+                            result: 'level1_repairCar',
+                            available: false
+                        }
+                    ]
+                },
+                'Дрон': {
+                    location: 'nsk',
+                    status: '💡 Придумывает план',
+                    emoji: '👨‍💻',
+                    color: '#4ECDC4',
+                    dialog: 'Эй, а давайте в субботу в баню! Но нужна машина и дрова. Кто поможет?',
+                    actions: [
+                        { 
+                            text: '🗣️ Предложить собраться', 
+                            result: 'level1_startPlan',
+                            available: true
+                        }
+                    ]
+                },
+                'Троф': {
+                    location: 'nsk',
+                    status: '📞 Связывается с Шмелем',
+                    emoji: '👨‍💼',
+                    color: '#FFD166',
+                    dialog: 'Я могу позвонить Шмелю на вахту, договориться о пиве. Но нужно уговорить Лёху дать денег на запчасти!',
+                    actions: [
+                        { 
+                            text: '📲 Позвонить Шмелю', 
+                            result: 'level1_callShmel',
+                            available: true
+                        }
+                    ]
+                },
+                'Шмель': {
+                    location: 'free',
+                    status: '⏰ На вахте, освободится в субботу',
+                    emoji: '👷‍♂️',
+                    color: '#06D6A0',
+                    dialog: 'Привет! Я на вахте, освобожусь только в субботу вечером. Но могу привезти пива! Позовите меня, когда будете готовы.',
+                    actions: []
+                },
+                'Децина': {
+                    location: 'madagascar',
+                    status: '🏖️ В отпуске, рейс через 2 недели',
+                    emoji: '👨‍✈️',
+                    color: '#118AB2',
+                    dialog: 'Ребзя, я бы с радостью, но мой рейс только через 2 недели! Если найдете срочный вариант - я в деле!',
+                    actions: []
+                },
+                'Боб': {
+                    location: 'nsk',
+                    status: '🔧 Есть инструменты, может починить',
+                    emoji: '👨‍🔧',
+                    color: '#EF476F',
+                    dialog: 'Я могу починить машину Пуча, если Лёха даст деньги на запчасти. И инструменты у меня есть!',
+                    actions: [
+                        { 
+                            text: '🔧 Починить машину', 
+                            requirement: '💰 Нужны деньги на запчасти',
+                            result: 'level1_repairCar',
+                            available: false
+                        }
+                    ]
+                },
+                'Лёха': {
+                    location: 'nsk',
+                    status: '💰 Жадина, но есть деньги',
+                    emoji: '👨‍💼',
+                    color: '#7209B7',
+                    dialog: 'Я дам денег на запчасти, но только если Троф уговорит Шмеля привезти пива! И диван мой завезите по пути!',
+                    actions: [
+                        { 
+                            text: '💰 Дать деньги на запчасти', 
+                            requirement: '🤝 Нужен договор с Шмелем о пиве',
+                            result: 'level1_giveMoney',
+                            available: false
+                        }
+                    ]
+                }
+            },
+            levelStates: {
+                level1: {
+                    planStarted: false,
+                    shmelAgreed: false,
+                    moneyGiven: false,
+                    carFixed: false,
+                    completed: false
+                },
+                level2: {
+                    charterArranged: false,
+                    cargoFound: false,
+                    decinaFlying: false,
+                    completed: false
+                },
+                level3: {
+                    gasMoneyGiven: false,
+                    bobAgreed: false,
+                    puchGoing: false,
+                    shmelPickedUp: false,
+                    allInBanya: false,
+                    completed: false
+                }
+            },
+            levelProgress: {
+                1: 0,
+                2: 0,
+                3: 0
+            },
+            selectedCharacter: null
+        };
+
+        // Инициализация игры
+        function initGame() {
+            renderAllLocations();
+            updateUI();
+            renderMessages();
+            
+            // Добавляем обработчик для кнопки перезапуска
+            document.getElementById('restartBtn').addEventListener('click', restartGame);
+            
+            // Показываем начальные диалоги
+            showLocationDialogs();
+        }
+
+        // Отрисовка всех локаций
+        function renderAllLocations() {
+            // Очищаем все локации
+            ['nsk', 'madagascar', 'free', 'banya'].forEach(loc => {
+                document.getElementById(`${loc}-characters`).innerHTML = '';
+            });
+            
+            // Распределяем персонажей по локациям
+            Object.entries(gameState.characters).forEach(([name, data]) => {
+                const charElement = document.createElement('div');
+                charElement.className = 'character-mini';
+                if (gameState.selectedCharacter === name) {
+                    charElement.classList.add('active');
+                }
+                charElement.dataset.character = name;
+                charElement.onclick = () => selectCharacter(name);
+                
+                charElement.innerHTML = `
+                    <div class="character-emoji">${data.emoji}</div>
+                    <div class="character-name">${name}</div>
+                    <div style="font-size: 0.8rem; color: ${data.color}; margin-top: 5px;">${data.status.split(' ')[0]}</div>
+                `;
+                
+                document.getElementById(`${data.location}-characters`).appendChild(charElement);
+            });
+            
+            // Обновляем статусы локаций
+            updateLocationStatuses();
+        }
+
+        // Обновление статусов локаций
+        function updateLocationStatuses() {
+            const nskCount = Object.values(gameState.characters).filter(c => c.location === 'nsk').length;
+            const banyaCount = Object.values(gameState.characters).filter(c => c.location === 'banya').length;
+            
+            document.getElementById('nsk-status').textContent = `${nskCount} друзей`;
+            document.getElementById('banya-status').textContent = `${banyaCount}/7`;
+        }
+
+        // Выбор персонажа
+        function selectCharacter(name) {
+            gameState.selectedCharacter = name;
+            renderAllLocations();
+            showLocationDialogs();
+            
+            // Добавляем сообщение
+            const char = gameState.characters[name];
+            addMessage(`🗣️ Выбран: ${name} (${char.status})`, true);
+        }
+
+        // Показать диалоги в локациях
+        function showLocationDialogs() {
+            // Очищаем все диалоги
+            ['nsk', 'madagascar', 'free', 'banya'].forEach(loc => {
+                document.getElementById(`${loc}-dialog`).innerHTML = '';
+            });
+            
+            // Если выбран персонаж, показываем его диалог
+            if (gameState.selectedCharacter) {
+                const char = gameState.characters[gameState.selectedCharacter];
+                const location = char.location;
+                const dialogContainer = document.getElementById(`${location}-dialog`);
+                
+                let actions = [];
+                if (gameState.level === 1) {
+                    actions = char.actions || [];
+                }
+                
+                // Проверяем доступность действий
+                const availableActions = actions.filter(action => checkActionAvailability(action));
+                
+                dialogContainer.innerHTML = `
+                    <div class="dialog-bubble ${location}">
+                        <div class="dialog-speaker">
+                            <span style="color: ${char.color}">${char.emoji}</span>
+                            <span>${gameState.selectedCharacter}</span>
+                        </div>
+                        <div class="dialog-text">${char.dialog}</div>
+                        ${availableActions.length > 0 ? `
+                            <div class="dialog-actions">
+                                ${availableActions.map(action => `
+                                    <button class="action-btn" onclick="handleAction('${action.result}', '${gameState.selectedCharacter}')">
+                                        ${action.text}
+                                        ${action.requirement ? `<div class="action-requirement">${action.requirement}</div>` : ''}
+                                    </button>
+                                `).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            } else {
+                // Показываем общие диалоги для каждой локации
+                showGeneralDialogs();
+            }
+        }
+
+        // Показать общие диалоги
+        function showGeneralDialogs() {
+            const nskDialog = document.getElementById('nsk-dialog');
+            nskDialog.innerHTML = `
+                <div class="dialog-bubble nsk">
+                    <div class="dialog-text">🏠 В Кольцово собрались 5 друзей. Нужно починить машину Пуча и договориться о встрече!</div>
+                    <div class="dialog-text">👆 Кликни на любого персонажа, чтобы поговорить с ним</div>
+                </div>
+            `;
+            
+            const madagascarDialog = document.getElementById('madagascar-dialog');
+            madagascarDialog.innerHTML = `
+                <div class="dialog-bubble madagascar">
+                    <div class="dialog-text">🏝️ Децина в отпуске на Мадагаскаре. Нужно найти способ вернуть его быстрее!</div>
+                </div>
+            `;
+            
+            const freeDialog = document.getElementById('free-dialog');
+            freeDialog.innerHTML = `
+                <div class="dialog-bubble free">
+                    <div class="dialog-text">🏭 Шмель на вахте в Свободном. Освободится только в субботу вечером.</div>
+                </div>
+            `;
+            
+            const banyaDialog = document.getElementById('banya-dialog');
+            banyaDialog.innerHTML = `
+                <div class="dialog-bubble banya">
+                    <div class="dialog-text">♨️ Баня ждет всех 7 друзей! Собери их вместе для общей парилки!</div>
+                    <div class="dialog-text">🎯 Прогресс: ${document.getElementById('banya-status').textContent}</div>
+                </div>
+            `;
+        }
+
+        // Проверка доступности действия
+        function checkActionAvailability(action) {
+            // Если действие отмечено как unavailable, проверяем условия
+            if (action.available === false) {
+                switch(action.result) {
+                    case 'level1_repairCar':
+                        return gameState.levelStates.level1.moneyGiven;
+                    case 'level1_giveMoney':
+                        return gameState.levelStates.level1.shmelAgreed;
+                    default:
+                        return false;
+                }
+            }
+            return true;
+        }
+
+        // Обработка действий
+        function handleAction(action, character) {
+            let message = '';
+            
+            switch(action) {
+                case 'level1_startPlan':
+                    gameState.levelStates.level1.planStarted = true;
+                    gameState.levelProgress[1] = 20;
+                    message = '💡 Дрон предложил план: собраться в субботу в бане! Нужно починить машину Пуча.';
+                    // Обновляем диалог Дрона
+                    gameState.characters['Дрон'].dialog = 'Отлично! План принят. Теперь нужно починить машину Пуча. Поговори с ним и Бобом!';
+                    break;
+                    
+                case 'level1_callShmel':
+                    gameState.levelStates.level1.shmelAgreed = true;
+                    gameState.levelProgress[1] = 40;
+                    message = '📞 Троф договорился с Шмелем о пиве! Теперь Лёха должен дать деньги.';
+                    // Обновляем статус Трофа
+                    gameState.characters['Троф'].status = '✅ Договорился с Шмелем о пиве';
+                    gameState.characters['Троф'].dialog = 'Отлично! Шмель привезет пиво. Теперь можно просить деньги у Лёхи на запчасти.';
+                    // Делаем действие Лёхи доступным
+                    const lehaAction = gameState.characters['Лёха'].actions.find(a => a.result === 'level1_giveMoney');
+                    if (lehaAction) {
+                        lehaAction.available = true;
+                        gameState.characters['Лёха'].dialog = 'Хорошо, раз Шмель везет пиво - даю деньги на запчасти! Заберите у меня.';
+                    }
+                    break;
+                    
+                case 'level1_giveMoney':
+                    gameState.levelStates.level1.moneyGiven = true;
+                    gameState.inventory.push('💰 Деньги на запчасти');
+                    gameState.levelProgress[1] = 60;
+                    message = '💰 Лёха дал деньги на запчасти! Теперь Боб может чинить машину Пуча.';
+                    // Обновляем статус Лёхи
+                    gameState.characters['Лёха'].status = '✅ Дал деньги на запчасти';
+                    gameState.characters['Лёха'].dialog = 'Деньги дал! Теперь Боб, чини машину Пуча! И диван мой не забудьте!';
+                    // Делаем действия починки доступными
+                    const puchAction = gameState.characters['Пуч'].actions.find(a => a.result === 'level1_repairCar');
+                    const bobAction = gameState.characters['Боб'].actions.find(a => a.result === 'level1_repairCar');
+                    if (puchAction) puchAction.available = true;
+                    if (bobAction) bobAction.available = true;
+                    
+                    // Обновляем диалоги
+                    gameState.characters['Пуч'].dialog = 'Отлично! Деньги есть. Боб, давай чинить машину!';
+                    gameState.characters['Боб'].dialog = 'Деньги получил! Чиним машину Пуча. Инструменты готовы!';
+                    break;
+                    
+                case 'level1_repairCar':
+                    if (!gameState.levelStates.level1.moneyGiven) {
+                        addMessage('❌ Сначала нужно получить деньги у Лёхи!', true);
+                        return;
+                    }
+                    
+                    gameState.levelStates.level1.carFixed = true;
+                    gameState.inventory.push('🚗 Исправная машина');
+                    gameState.levelProgress[1] = 100;
+                    message = '🔧 Машина Пуча починена! Уровень 1 пройден!';
+                    
+                    // Обновляем статусы
+                    gameState.characters['Пуч'].status = '🚗 Машина починена!';
+                    gameState.characters['Боб'].status = '✅ Починил машину';
+                    gameState.characters['Пуч'].location = 'nsk';
+                    gameState.characters['Боб'].location = 'nsk';
+                    
+                    // Проверяем завершение уровня 1
+                    setTimeout(() => {
+                        checkLevel1Completion();
+                    }, 1000);
+                    break;
+            }
+            
+            if (message) {
+                addMessage(message, true);
+            }
+            
+            updateUI();
+            renderAllLocations();
+            showLocationDialogs();
+        }
+
+        // Проверка завершения уровня 1
+        function checkLevel1Completion() {
+            if (gameState.levelStates.level1.carFixed) {
+                gameState.levelStates.level1.completed = true;
+                gameState.completedLevels.push(1);
+                
+                setTimeout(() => {
+                    addMessage('🎉 Уровень 1 пройден! Машина готова, местные собраны!', true);
+                    // Переход ко второму уровню
+                    gameState.level = 2;
+                    setupLevel2();
+                }, 1500);
+            }
+        }
+
+        // Настройка уровня 2
+        function setupLevel2() {
+            gameState.levelProgress[2] = 0;
+            
+            // Обновляем статусы для уровня 2
+            gameState.characters['Дрон'].status = '💡 Ищет способ вернуть Децину';
+            gameState.characters['Дрон'].dialog = 'Децин же работает в логистике! Может, найти ему попутный груз из Мадагаскара?';
+            gameState.characters['Дрон'].actions = [
+                { 
+                    text: '🌍 Искать попутный груз', 
+                    requirement: '📞 Нужна связь с Шмелем',
+                    result: 'level2_findCargo',
+                    available: false
+                }
+            ];
+            
+            gameState.characters['Троф'].status = '📞 Связь с Шмелем';
+            gameState.characters['Троф'].dialog = 'Шмель говорит, у его брата связи в аэропорту. Может найти чартер для Децины.';
+            gameState.characters['Троф'].actions = [
+                { 
+                    text: '✈️ Договориться о чартере', 
+                    result: 'level2_arrangeCharter',
+                    available: true
+                }
+            ];
+            
+            gameState.characters['Децина'].dialog = 'Если найдете срочный рейс или попутный груз - я готов лететь! Работаю в логистике, могу сопровождать груз.';
+            
+            addMessage('🔄 Уровень 2: Нужно вернуть Децину с Мадагаскара!', true);
+            updateUI();
+            showLocationDialogs();
+        }
+
+        // Проверка завершения уровня 2
+        function checkLevel2Completion() {
+            if (gameState.levelStates.level2.decinaFlying) {
+                gameState.levelStates.level2.completed = true;
+                gameState.completedLevels.push(2);
+                
+                setTimeout(() => {
+                    addMessage('🎉 Уровень 2 пройден! Децина в пути!', true);
+                    // Переход к третьему уровню
+                    gameState.level = 3;
+                    setupLevel3();
+                }, 1500);
+            }
+        }
+
+        // Проверка завершения уровня 3
+        function checkLevel3Completion() {
+            if (gameState.levelStates.level3.allInBanya) {
+                gameState.levelStates.level3.completed = true;
+                gameState.completedLevels.push(3);
+                
+                setTimeout(() => {
+                    showWinScreen();
+                }, 2000);
+            }
+        }
+
+        // Добавление сообщения в лог
+        function addMessage(text, isNew = false) {
+            gameState.messages.push({text, new: isNew});
+            renderMessages();
+        }
+
+        // Отрисовка сообщений
+        function renderMessages() {
+            const messagesContainer = document.getElementById('gameMessages');
+            messagesContainer.innerHTML = '';
+            
+            // Показываем последние 8 сообщений
+            const recentMessages = gameState.messages.slice(-8);
+            
+            recentMessages.forEach(msg => {
+                const message = document.createElement('div');
+                message.className = `message ${msg.new ? 'new' : ''}`;
+                message.textContent = msg.text;
+                messagesContainer.appendChild(message);
+            });
+            
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // Обновление интерфейса
+        function updateUI() {
+            // Обновляем индикатор уровня
+            let levelText = '';
+            let levelIcon = '';
+            
+            switch(gameState.level) {
+                case 1:
+                    levelText = 'Уровень 1: Созвездие Кольцово';
+                    levelIcon = '🏠';
+                    break;
+                case 2:
+                    levelText = 'Уровень 2: Мадагаскарский экспресс';
+                    levelIcon = '🏝️';
+                    break;
+                case 3:
+                    levelText = 'Уровень 3: Вахтовый манёвр';
+                    levelIcon = '🏭';
+                    break;
+            }
+            
+            document.getElementById('currentLevelText').textContent = levelText;
+            document.getElementById('currentLevelIcon').textContent = levelIcon;
+            
+            // Обновляем прогресс
+            const progress = gameState.levelProgress[gameState.level];
+            document.getElementById('levelProgress').style.width = `${progress}%`;
+            document.getElementById('progressPercent').textContent = `${progress}%`;
+            
+            // Обновляем попытки
+            for (let i = 1; i <= 3; i++) {
+                const attempt = document.getElementById(`attempt${i}`);
+                if (i < gameState.currentAttempt) {
+                    attempt.className = 'attempt used';
+                } else if (i === gameState.currentAttempt) {
+                    attempt.className = 'attempt active';
+                } else {
+                    attempt.className = 'attempt';
+                }
+            }
+            
+            // Обновляем инвентарь
+            const inventoryItems = document.getElementById('inventoryItems');
+            inventoryItems.innerHTML = '';
+            
+            if (gameState.inventory.length === 0) {
+                inventoryItems.innerHTML = '<div style="color:#aaa; font-style:italic; padding: 10px;">Инвентарь пуст</div>';
+            } else {
+                gameState.inventory.forEach(item => {
+                    const itemEl = document.createElement('div');
+                    itemEl.className = 'inventory-item';
+                    itemEl.innerHTML = `
+                        <span class="inventory-emoji">${item.split(' ')[0]}</span>
+                        <span>${item}</span>
+                    `;
+                    inventoryItems.appendChild(itemEl);
+                });
+            }
+        }
+
+        // Показать экран победы
+        function showWinScreen() {
+            // Перемещаем всех в баню
+            Object.values(gameState.characters).forEach(char => {
+                char.location = 'banya';
+                char.status = '♨️ В бане!';
+            });
+            
+            renderAllLocations();
+            
+            // Показываем поздравления в бане
+            const banyaDialog = document.getElementById('banya-dialog');
+            banyaDialog.innerHTML = `
+                <div class="dialog-bubble banya">
+                    <div class="dialog-speaker" style="color: #ff9966;">
+                        <span>🎉</span>
+                        <span>ВСЕ ДРУЗЬЯ В БАНЕ!</span>
+                    </div>
+                    <div class="dialog-text">♨️ Пар легкий! Миссия выполнена!</div>
+                    <div class="dialog-text">👥 Все 7 друзей собрались вместе!</div>
+                    <div class="dialog-text">🎮 Поздравляем с победой!</div>
+                </div>
+            `;
+            
+            // Показываем экран победы
+            setTimeout(() => {
+                document.getElementById('winScreen').classList.add('active');
+            }, 1000);
+        }
+
+        // Перезапуск игры
+        function restartGame() {
+            // Сброс состояния игры
+            Object.assign(gameState, {
+                level: 1,
+                attempts: 3,
+                currentAttempt: 1,
+                progress: 0,
+                inventory: [],
+                messages: [
+                    {text: '🔄 Игра перезапущена! Удачи!', new: true},
+                    {text: '👆 Кликай на персонажей в их локациях', new: false}
+                ],
+                completedLevels: [],
+                characters: {
+                    'Пуч': {
+                        location: 'nsk',
+                        status: '🚗 Готов к бане, но машина сломана',
+                        emoji: '👨‍🔧',
+                        color: '#FF6B6B',
+                        dialog: 'Я бы всех отвез, но у меня карбюратор чихнул... Может, Боб посмотрит?',
+                        actions: [
+                            { 
+                                text: '🔧 Починить машину', 
+                                requirement: '💰 Нужны деньги на запчасти от Лёхи',
+                                result: 'level1_repairCar',
+                                available: false
+                            }
+                        ]
+                    },
+                    'Дрон': {
+                        location: 'nsk',
+                        status: '💡 Придумывает план',
+                        emoji: '👨‍💻',
+                        color: '#4ECDC4',
+                        dialog: 'Эй, а давайте в субботу в баню! Но нужна машина и дрова. Кто поможет?',
+                        actions: [
+                            { 
+                                text: '🗣️ Предложить собраться', 
+                                result: 'level1_startPlan',
+                                available: true
+                            }
+                        ]
+                    },
+                    'Троф': {
+                        location: 'nsk',
+                        status: '📞 Связывается с Шмелем',
+                        emoji: '👨‍💼',
+                        color: '#FFD166',
+                        dialog: 'Я могу позвонить Шмелю на вахту, договориться о пиве. Но нужно уговорить Лёху дать денег на запчасти!',
+                        actions: [
+                            { 
+                                text: '📲 Позвонить Шмелю', 
+                                result: 'level1_callShmel',
+                                available: true
+                            }
+                        ]
+                    },
+                    'Шмель': {
+                        location: 'free',
+                        status: '⏰ На вахте, освободится в субботу',
+                        emoji: '👷‍♂️',
+                        color: '#06D6A0',
+                        dialog: 'Привет! Я на вахте, освобожусь только в субботу вечером. Но могу привезти пива! Позовите меня, когда будете готовы.',
+                        actions: []
+                    },
+                    'Децина': {
+                        location: 'madagascar',
+                        status: '🏖️ В отпуске, рейс через 2 недели',
+                        emoji: '👨‍✈️',
+                        color: '#118AB2',
+                        dialog: 'Ребзя, я бы с радостью, но мой рейс только через 2 недели! Если найдете срочный вариант - я в деле!',
+                        actions: []
+                    },
+                    'Боб': {
+                        location: 'nsk',
+                        status: '🔧 Есть инструменты, может починить',
+                        emoji: '👨‍🔧',
+                        color: '#EF476F',
+                        dialog: 'Я могу починить машину Пуча, если Лёха даст деньги на запчасти. И инструменты у меня есть!',
+                        actions: [
+                            { 
+                                text: '🔧 Починить машину', 
+                                requirement: '💰 Нужны деньги на запчасти',
+                                result: 'level1_repairCar',
+                                available: false
+                            }
+                        ]
+                    },
+                    'Лёха': {
+                        location: 'nsk',
+                        status: '💰 Жадина, но есть деньги',
+                        emoji: '👨‍💼',
+                        color: '#7209B7',
+                        dialog: 'Я дам денег на запчасти, но только если Троф уговорит Шмеля привезти пива! И диван мой завезите по пути!',
+                        actions: [
+                            { 
+                                text: '💰 Дать деньги на запчасти', 
+                                requirement: '🤝 Нужен договор с Шмелем о пиве',
+                                result: 'level1_giveMoney',
+                                available: false
+                            }
+                        ]
+                    }
+                },
+                levelStates: {
+                    level1: {
+                        planStarted: false,
+                        shmelAgreed: false,
+                        moneyGiven: false,
+                        carFixed: false,
+                        completed: false
+                    },
+                    level2: {
+                        charterArranged: false,
+                        cargoFound: false,
+                        decinaFlying: false,
+                        completed: false
+                    },
+                    level3: {
+                        gasMoneyGiven: false,
+                        bobAgreed: false,
+                        puchGoing: false,
+                        shmelPickedUp: false,
+                        allInBanya: false,
+                        completed: false
+                    }
+                },
+                levelProgress: {
+                    1: 0,
+                    2: 0,
+                    3: 0
+                },
+                selectedCharacter: null
+            });
+            
+            // Закрываем экран победы
+            document.getElementById('winScreen').classList.remove('active');
+            
+            // Перезапускаем игру
+            initGame();
+        }
+
+        // Инициализируем игру при загрузке страницы
+        window.onload = initGame;
+    </script>
 </body>
 </html>
